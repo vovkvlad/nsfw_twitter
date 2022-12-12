@@ -1,0 +1,14 @@
+{
+  "name": "nsfw_twitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:api": "npm run start --workspace=api"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "packages/api"
+  ]
+}
