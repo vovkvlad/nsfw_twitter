@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:api": "npm run start --workspace=api"
+    "start:api": "npm run start --workspace=api",
+    "start:bot": "npm run start --workspace=t_bot"
   },
   "author": "",
   "license": "ISC",
   "workspaces": [
-    "packages/api"
+    "packages/api",
+    "packages/t_bot"
   ],
   "devDependencies": {
     "eslint": "^8.29.0",
