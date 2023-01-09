@@ -14,8 +14,9 @@ export async function getPredictionsFromTwitterResponse(twitterResponse = {}) {
 
   const predictionPromises = [];
   mediaFiles.forEach((mediaFileItem) => {
+    const url = mediaFileItem.url || mediaFileItem.preview_image_url;
     predictionPromises.push(
-      getPredictions(mediaFileItem.url, mediaFileItem.media_key)
+      getPredictions(url, mediaFileItem.media_key)
     );
   });
 
