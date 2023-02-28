@@ -5,7 +5,9 @@ import * as dotenv from 'dotenv';
 
 import { initRoutes } from './routes.js';
 
-dotenv.config({ path: path.resolve('../../.env') });
+if (process.env.NODE_ENV === 'development') {
+  dotenv.config({ path: path.resolve('../../.env') });
+}
 
 const fastify = Fastify({
   logger: true,
@@ -14,7 +16,7 @@ const fastify = Fastify({
 initRoutes(fastify);
 
 fastify.listen(
-  { port: process.env.API_SERVER_PORT },
+  { port: process.env.API_SERVER_PORT, host: '0.0.0.0' },
   function (error, address) {
     if (error) {
       fastify.log.error(error);

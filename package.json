@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:api": "npm run start --workspace=api",
-    "start:bot": "npm run start --workspace=t_bot"
+    "start:api": "NODE_ENV=development npm run start --workspace=api",
+    "start:bot": "NODE_ENV=development npm run start --workspace=t_bot"
   },
   "author": "",
   "license": "ISC",

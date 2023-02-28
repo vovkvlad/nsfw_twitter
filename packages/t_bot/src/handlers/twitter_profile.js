@@ -1,5 +1,8 @@
+import process from 'node:process';
 import { fmt, italic, bold } from 'telegraf/format';
 import axios from 'axios';
+
+import { logger } from '../logger.js';
 
 export async function twitter_profile_by_url(ctx) {
   const userName = ctx.match[1];
@@ -11,21 +14,23 @@ Please note it can take a few minutes ⏳`
     // hardcoding for now
     try {
       const response = await axios.get('/check', {
-        baseURL: 'http://127.0.0.1:3000',
+        baseURL: `http://api:${process.env.API_SERVER_PORT}`,
         params: {
           user_name: userName,
         },
       });
-      response.data.forEach(tweetItem => {
-        tweetItem.predictions.forEach(item => ctx.reply(item.imgUrl));
+      response.data.forEach((tweetItem) => {
+        tweetItem.predictions.forEach((item) => ctx.reply(item.imgUrl));
         // const tweetURL = `https://twitter.com/${userName}/status/${tweetItem.tweetId}`;
       });
     } catch (error) {
+      logger.error(`ERROR REACHING API: ${JSON.stringify(error)}`);
       ctx.reply(
         'Something went wrong and probably broken 🫠. Sorry, buddy, not this time 😥'
       );
     }
   } else {
+    logger.error(`ERROR PARSING USERNAME. Message: ${ctx.message.text}`);s
     ctx.reply(
       'Sorry, username was not parsed correctly. Cannot search for twitter user without valid twitter user_name 😥'
     );

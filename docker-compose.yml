@@ -1,0 +1,14 @@
+services:
+  api:
+    build: ./packages/api
+    environment:
+      API_SERVER_PORT: ${API_SERVER_PORT}
+      BEARER_TOKEN: ${BEARER_TOKEN}
+      API_KEY: ${API_KEY}
+    ports:
+      - '${API_SERVER_PORT}:${API_SERVER_PORT}'
+  t_bot:
+    build: ./packages/t_bot
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      API_SERVER_PORT: ${API_SERVER_PORT}
