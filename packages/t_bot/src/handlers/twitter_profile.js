@@ -14,7 +14,7 @@ Please note it can take a few minutes ⏳`
     // hardcoding for now
     try {
       const response = await axios.get('/check', {
-        baseURL: `http://api:${process.env.API_SERVER_PORT}`,
+        baseURL: `http://${process.env.API_HOST}:${process.env.API_SERVER_PORT}`,
         params: {
           user_name: userName,
         },
