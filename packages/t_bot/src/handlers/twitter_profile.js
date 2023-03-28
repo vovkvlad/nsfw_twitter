@@ -19,10 +19,15 @@ Please note it can take a few minutes ⏳`
           user_name: userName,
         },
       });
-      response.data.forEach((tweetItem) => {
-        tweetItem.predictions.forEach((item) => ctx.reply(item.imgUrl));
-        // const tweetURL = `https://twitter.com/${userName}/status/${tweetItem.tweetId}`;
-      });
+
+      if(response.data.length > 0) {
+        response.data.forEach((tweetItem) => {
+          tweetItem.predictions.forEach((item) => ctx.reply(item.imgUrl));
+          // const tweetURL = `https://twitter.com/${userName}/status/${tweetItem.tweetId}`;
+        });
+      } else {
+        ctx.reply('Seems like this user has not posted any 🍓 within last 7 days.');
+      }
     } catch (error) {
       logger.error(`ERROR REACHING API: ${JSON.stringify(error)}`);
       ctx.reply(

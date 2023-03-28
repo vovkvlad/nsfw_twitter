@@ -11,11 +11,12 @@ export function initRoutes(fastify) {
   });
 
   fastify.get('/check', async function (request, reply) {
+    console.time('HTTP_REQUEST');
     const userName = request.query?.user_name ?? null;
 
     if (!userName) {
       request.log.error(
-        'ERROR: userName has not b een provided to check route'
+        'ERROR: userName has not been provided to check route'
       );
       const error = new Error(
         'Twitter username has not been provided or was not parsed correctly'
@@ -30,7 +31,8 @@ export function initRoutes(fastify) {
 
           try {
             const dataWithPredictions = await getPredictionsFromTwitterResponse(
-              twitterResponse
+              twitterResponse,
+              fastify.nsfw_model
             );
 
             // TODO parameterize these thresholds
@@ -40,6 +42,7 @@ export function initRoutes(fastify) {
               Hentai: 0.6,
             });
             reply.code(200).send(filteredData);
+            console.timeEnd('HTTP_REQUEST');
           } catch (predictorError) {
             fastify.log.error(
               'Error has occurred during prediction phase. Details:',

@@ -1,10 +1,13 @@
 import axios from 'axios';
-import * as nsfw from 'nsfwjs';
 import * as tensorFlow from '@tensorflow/tfjs-node';
 
-export async function getPredictionsFromTwitterResponse(twitterResponse = {}) {
+export async function getPredictionsFromTwitterResponse(twitterResponse = {}, model) {
   const tweets = twitterResponse.data;
   const mediaFiles = twitterResponse?.includes?.media;
+
+  if(twitterResponse.meta.result_count === 0) {
+    return [];
+  }
 
   if (!tweets || !mediaFiles) {
     throw new Error(
@@ -16,7 +19,7 @@ export async function getPredictionsFromTwitterResponse(twitterResponse = {}) {
   mediaFiles.forEach((mediaFileItem) => {
     const url = mediaFileItem.url || mediaFileItem.preview_image_url;
     predictionPromises.push(
-      getPredictions(url, mediaFileItem.media_key)
+      getPredictions(url, mediaFileItem.media_key, model)
     );
   });
 
@@ -41,12 +44,11 @@ export async function getPredictionsFromTwitterResponse(twitterResponse = {}) {
     };
   });
 }
-export async function getPredictions(url, mediaKey) {
+export async function getPredictions(url, mediaKey, model) {
   try {
     const pic = await axios.get(url, {
       responseType: 'arraybuffer',
     });
-    const model = await nsfw.load();
     const image = await tensorFlow.node.decodeImage(pic.data, 3);
     const predictions = await model.classify(image);
     image.dispose(); // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
