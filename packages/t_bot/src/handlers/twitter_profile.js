@@ -11,7 +11,6 @@ export async function twitter_profile_by_url(ctx) {
       fmt`URL parsed. Searching for the NSFW media files of the user ${italic`${bold`${userName}`}`}.
 Please note it can take a few minutes ⏳`
     );
-    // hardcoding for now
     try {
       const response = await axios.get('/check', {
         baseURL: `http://${process.env.API_HOST}:${process.env.API_SERVER_PORT}`,
@@ -20,13 +19,24 @@ Please note it can take a few minutes ⏳`
         },
       });
 
-      if(response.data.length > 0) {
+      if (response.data.length > 0) {
+        const mediaGroup = [];
+
         response.data.forEach((tweetItem) => {
-          tweetItem.predictions.forEach((item) => ctx.reply(item.imgUrl));
-          // const tweetURL = `https://twitter.com/${userName}/status/${tweetItem.tweetId}`;
+          tweetItem.predictions.forEach((item) =>
+            mediaGroup.push({
+              media: { url: item.imgUrl },
+              caption: tweetItem.tweetText,
+              type: 'photo',
+            })
+          );
         });
+
+        ctx.replyWithMediaGroup(mediaGroup);
       } else {
-        ctx.reply('Seems like this user has not posted any 🍓 within last 7 days.');
+        ctx.reply(
+          'Seems like this user has not posted any 🍓 within last 7 days.'
+        );
       }
     } catch (error) {
       logger.error(`ERROR REACHING API: ${JSON.stringify(error)}`);
@@ -35,7 +45,7 @@ Please note it can take a few minutes ⏳`
       );
     }
   } else {
-    logger.error(`ERROR PARSING USERNAME. Message: ${ctx.message.text}`);s
+    logger.error(`ERROR PARSING USERNAME. Message: ${ctx.message.text}`);
     ctx.reply(
       'Sorry, username was not parsed correctly. Cannot search for twitter user without valid twitter user_name 😥'
     );
