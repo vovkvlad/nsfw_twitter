@@ -23,7 +23,9 @@ bot.use(async (ctx, next) => {
 bot.start(start);
 bot.help(help);
 bot.url(/https?:\/\/twitter\.com\/(\w+)/, twitter_profile_by_url);
-bot.hears(/\w*/, (ctx) => {});
+bot.hears(/\w*/, (ctx) => {
+  console.log(ctx);
+});
 
 logger.info('Starting bot');
 bot.launch();
