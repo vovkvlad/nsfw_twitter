@@ -19,6 +19,8 @@ jobs:
         run: |
           CURRENT_VERSION=$(echo "${{ steps.get_version.outputs.version }}")
           PREVIOUS_VERSION=$(git describe --tags --abbrev=0)
+          echo $CURRENT_VERSION
+          echo PREVIOUS_VERSION
           if [[ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then echo "::set-output name=tag::true"; fi
       - name: Create Git Tag
         if: steps.compare_versions.outputs.tag == 'true'
