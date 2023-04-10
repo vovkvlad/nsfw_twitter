@@ -1,0 +1,47 @@
+name: Create Release on Version Change
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get current version
+        id: get_version
+        run: echo ::set-output name=version::$(node -p "require('./package.json').version")
+      - name: Compare versions
+        id: compare_versions
+        run: |
+          CURRENT_VERSION=$(echo "${{ steps.get_version.outputs.version }}")
+          PREVIOUS_VERSION=$(git describe --tags --abbrev=0)
+          if [[ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then echo "::set-output name=tag::true"; fi
+      - name: Create Git Tag
+        if: steps.compare_versions.outputs.tag == 'true'
+        id: create_tag
+        run: |
+          TAG_NAME=$(echo "${{ steps.get_version.outputs.version }}")
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+      - name: Get commit messages
+        if: steps.compare_versions.outputs.tag == 'true'
+        id: get_commit_messages
+        run: |
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
+          COMMIT_MESSAGES=$(git log --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
+          echo "::set-output name=commit_messages::$COMMIT_MESSAGES"
+      - name: Create GitHub Release
+        if: steps.compare_versions.outputs.tag == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_title: Release ${{ steps.get_version.outputs.version }}
+          body: |
+            The following commits were included in this release:
+            ${{ steps.get_commit_messages.outputs.commit_messages }}
