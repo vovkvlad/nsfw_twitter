@@ -17,20 +17,22 @@ jobs:
         id: get_version
         run: |
           NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "NEW_VERSION = $NEW_VERSION"
+          echo "[debug] NEW_VERSION = $NEW_VERSION"
           echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
       - name: Compare versions
         id: compare_versions
         run: |
           CURRENT_VERSION=$(echo "${{ steps.get_version.outputs.NEW_VERSION }}")
-          echo "CURRENT_VERSION = $CURRENT_VERSION"
+          echo "[debug] CURRENT_VERSION = $CURRENT_VERSION"
+          echo "[debug] git tag --sort=-creatordate = $(git tag --sort=-creatordate)"
           PREVIOUS_VERSION=$(git tag --sort=-creatordate | grep -v -e "$CURRENT_VERSION" | head -n1)
-          echo "PREVIOUS_VERSION = $PREVIOUS_VERSION"
+          echo "[debug] PREVIOUS_VERSION = $PREVIOUS_VERSION"
           if [[ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then echo "TAG=true" >> "$GITHUB_OUTPUT" ; else echo "TAG=false" >> "$GITHUB_OUTPUT" ; fi
       - name: Create Git Tag
         if: steps.compare_versions.outputs.TAG == 'true'
         id: create_tag
         run: |
+          echo "[debug] TAG = ${{ steps.get_version.outputs.NEW_VERSION }}"
           TAG_NAME=$(echo "${{ steps.get_version.outputs.NEW_VERSION }}")
           git tag $TAG_NAME
           git push origin $TAG_NAME
