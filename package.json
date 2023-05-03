@@ -1,7 +1,7 @@
 {
   "name": "nsfw_twitter",
   "version": "0.0.3",
-  "description": "test string to trigger automation fourth try",
+  "description": "test string to trigger automation 5th try",
   "main": "index.js",
   "scripts": {
     "start:api": "NODE_ENV=development npm run start --workspace=api",

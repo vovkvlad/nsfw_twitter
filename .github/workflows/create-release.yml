@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Get current version
         id: get_version
         run: |
@@ -24,7 +26,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(echo "${{ steps.get_version.outputs.NEW_VERSION }}")
           echo "[debug] CURRENT_VERSION = $CURRENT_VERSION"
-          echo "[debug] git tag --sort=-creatordate = $(git tag --sort=-creatordate)"
+          echo "[debug] git tag = $(git tag)"
           PREVIOUS_VERSION=$(git tag --sort=-creatordate | grep -v -e "$CURRENT_VERSION" | head -n1)
           echo "[debug] PREVIOUS_VERSION = $PREVIOUS_VERSION"
           if [[ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then echo "TAG=true" >> "$GITHUB_OUTPUT" ; else echo "TAG=false" >> "$GITHUB_OUTPUT" ; fi
