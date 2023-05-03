@@ -27,7 +27,7 @@ jobs:
           CURRENT_VERSION=$(echo "${{ steps.get_version.outputs.NEW_VERSION }}")
           echo "[debug] CURRENT_VERSION = $CURRENT_VERSION"
           echo "[debug] git tag = $(git tag)"
-          PREVIOUS_VERSION=$(git tag --sort=-creatordate | grep -v -e "$CURRENT_VERSION" | head -n1)
+          PREVIOUS_VERSION=$(git tag --sort=-creatordate | head -n1)
           echo "[debug] PREVIOUS_VERSION = $PREVIOUS_VERSION"
           if [[ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then echo "TAG=true" >> "$GITHUB_OUTPUT" ; else echo "TAG=false" >> "$GITHUB_OUTPUT" ; fi
       - name: Create Git Tag
