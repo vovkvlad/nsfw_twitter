@@ -9,6 +9,12 @@ on: [ workflow_dispatch ]
 #    tags:
 #      - '*'
 
+env:
+  API_SERVER_PORT: 3000
+  API_HOST: 127.0.0.1
+  BEARER_TOKEN: ${{ secrets.TWITTER_API_TOKEN }}
+  BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
