@@ -34,7 +34,7 @@ jobs:
         if: steps.compare_versions.outputs.TAG == 'true'
         id: create_tag
         run: |
-          echo "[debug] TAG = ${{ steps.get_version.outputs.NEW_VERSION }}"
+          echo "[debug] TAG = ${{ steps.compare_versions.outputs.TAG }}"
           TAG_NAME=$(echo "${{ steps.get_version.outputs.NEW_VERSION }}")
           git tag $TAG_NAME
           git push origin $TAG_NAME
