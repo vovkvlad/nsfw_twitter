@@ -15,7 +15,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Get current version
         id: get_version
-        run: echo "NEW_VERSION=$(node -p "require('./package.json').version)" >> "$GITHUB_OUTPUT"
+         NEW_VERSION=$(node -p "require('./package.json').version")
+        run: echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
       - name: Compare versions
         id: compare_versions
         run: |
