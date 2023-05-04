@@ -27,7 +27,7 @@ jobs:
           docker compose build
           mkdir images
           docker save -o images/nsfw_twitter.tar nsfw_twitter-api nsfw_twitter-t_bot
-          gzip nsfw_twitter.tar
+          gzip images/nsfw_twitter.tar
 
       - name: Transfer images to server
         uses: appleboy/scp-action@master
