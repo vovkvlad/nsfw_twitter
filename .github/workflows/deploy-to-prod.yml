@@ -36,7 +36,7 @@ jobs:
           username: root
           key: ${{ secrets.PROD_PRIVATE_KEY }}
           source: images/nsfw_twitter.tar.gz
-          target: /root/images
+          target: /root
 
       - name: SSH to server and restart the app
         uses: appleboy/ssh-action@master
