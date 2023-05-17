@@ -46,7 +46,11 @@ jobs:
           key: ${{ secrets.PROD_PRIVATE_KEY }}
           script: |
             docker compose down
+            docker rm  $(docker ps -q -a)
+            docker rmi nsfw_twitter-api
+            docker rmi nsfw_twitter-t_bot
             cd /root/images
             docker load < nsfw_twitter.tar.gz
-            docker compose up --detach
             rm nsfw_twitter.tar.gz
+            cd /usr/src/app/nsfw_twitter
+            docker compose up --detach
