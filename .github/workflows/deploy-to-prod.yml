@@ -35,7 +35,7 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: root
           key: ${{ secrets.PROD_PRIVATE_KEY }}
-          source: images/
+          source: images/nsfw_twitter.tar.gz
           target: /root/images
 
       - name: SSH to server and restart the app
